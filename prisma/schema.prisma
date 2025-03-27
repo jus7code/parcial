@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,12 +7,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model estudiante {
-  id       String  @id @default(uuid())
+  id       String  @id
   name     String  @unique
   email    String  @unique
   password String
-  curso String?
+  curso    String?
 }
 
+model Evaluacion {
+  id          String    @id @default(uuid())
+  titulo      String    
+  descripcion String?  
+  preguntas   Pregunta[]  
+  intentos    Intento[]  
+  createdAt   DateTime  @default(now()) 
+}
+
+model Pregunta {
+  id          String   @id @default(uuid())
+  evaluacionId String  
+  evaluacion   Evaluacion @relation(fields: [evaluacionId], references: [id], onDelete: Cascade)
+  enunciado   String  
+  opciones    Opcion[] 
+}
+
+model Opcion {
+  id         String   @id @default(uuid())
+  preguntaId String   
+  pregunta   Pregunta @relation(fields: [preguntaId], references: [id], onDelete: Cascade)
+  texto      String   
+  esCorrecta Boolean  
+}
+
+model Intento {
+  id           String    @id @default(uuid())
+  usuarioId    String    
+  evaluacionId String    
+  evaluacion   Evaluacion @relation(fields: [evaluacionId], references: [id], onDelete: Cascade)
+  puntaje      Int       
+  total        Int       
+  createdAt    DateTime  @default(now()) 
+}
