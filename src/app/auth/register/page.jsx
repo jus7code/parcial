@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 function RegisterPage() {
   const { register , handleSubmit, formState:{errors}, watch} = useForm();
   const router = useRouter();
-  const isAdmin = watch("admin")
 
   {/* Request Api*/ }
   const onSubmit =handleSubmit(async (data) => {
@@ -18,7 +17,6 @@ function RegisterPage() {
             name: data.username,
             email:data.email,
             password:data.password,
-            isAdmin:data.admin,
         }),
         headers: {'Content-type':'application/json'}
     });
@@ -59,10 +57,6 @@ function RegisterPage() {
         <input type="password" {...register("confirmPassword", { required: { value: true, message: "Repetir la contraseña es obligatorio" } })} className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full" placeholder="Repite la contraseña"/>
         {errors.confirmPassword && (<span className="text-red-500 text-sm">{errors.confirmPassword.message}</span>)}
   
-        {/* Casilla de verificación para administrador */}
-        <label className="text-slate-500 mb-2 block text-sm">
-          <input type="checkbox" {...register("admin")} className="mr-2"/> ¿Eres administrador?
-        </label>
   
         {/* Botón Registrar */}
         <button className="w-full bg-blue-500 text-white p-3 rounded-lg mb-3  hover:bg-blue-700 transition">Registrar</button>
